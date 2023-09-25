@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Title, SubTitle, EmptyContactListText } from './App.styled';
 import ContactForm from 'components/ContactForm';
+import Filter from 'components/Filter';
 import ContactList from 'components/ContactList';
 
 export default class App extends Component {
@@ -21,7 +22,7 @@ export default class App extends Component {
         <ContactForm />
         <SubTitle>Contacts</SubTitle>
         <EmptyContactListText children="There are no contacts." />
-
+        <Filter />
         <ContactList contacts={contacts} />
       </Container>
     );

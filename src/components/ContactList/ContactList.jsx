@@ -6,7 +6,7 @@ import {
   DeleteButton,
 } from './ContactList.styled';
 
-const ContactList = ({ contacts }) => {
+const ContactList = ({ contacts, onDeleteContact }) => {
   return (
     <Contacts>
       {contacts.map(({ id, name, number }) => (
@@ -14,7 +14,11 @@ const ContactList = ({ contacts }) => {
           <Text>
             {name}: {number}
           </Text>
-          <DeleteButton type="button" children="Delete" />
+          <DeleteButton
+            type="button"
+            children="Delete"
+            onClick={() => onDeleteContact(id)}
+          />
         </ContactItem>
       ))}
     </Contacts>

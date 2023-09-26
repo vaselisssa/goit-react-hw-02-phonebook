@@ -13,6 +13,7 @@ export const FilterLabel = styled.label`
   gap: 4px;
   font-size: 18px;
   font-weight: 700;
+  color: #8a9ec1;
 `;
 
 export const FilterInput = styled.input`

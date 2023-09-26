@@ -13,18 +13,40 @@ export default class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
+    filter: '',
   };
 
-  //* додавання нового контакту
-  addContact = ({ name, number }) => {
+  //* додавання нового контакту з перевіркою на наявність контактів з таким ім'ям
+  addContact = contact => {
+    const isInContacts = this.state.contacts.some(
+      ({ name }) => name.toLowerCase() === contact.name.toLowerCase()
+    );
+    if (isInContacts) {
+      alert(`${contact.name} is already in  contacts`);
+      return;
+    }
+
     const newContact = {
       id: nanoid(),
-      name,
-      number,
+      ...contact,
     };
     this.setState(({ contacts }) => ({
       contacts: [newContact, ...contacts],
     }));
+  };
+
+  //* фільтр пошуку за ім'ям
+  //обробник зміни значення поля вводу фільтра
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  //функція для відображення знайдених за фільтром контактів
+  getFoundContacts = () => {
+    const { contacts, filter } = this.state;
+    const normalizeFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizeFilter)
+    );
   };
 
   //* видалення контакту
@@ -35,7 +57,10 @@ export default class App extends Component {
   };
 
   render() {
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
+
+    const foundContacts = this.getFoundContacts();
+
     return (
       <Container>
         <Title children="Phonebook" />
@@ -44,12 +69,15 @@ export default class App extends Component {
 
         {contacts.length > 0 ? (
           //* Фільтр рендеримо тільки, якщо масив контактів не порожній
-          <Filter />
+          <Filter value={filter} onChange={this.changeFilter} />
         ) : (
           <EmptyContactListText children="There are no contacts." />
         )}
 
-        <ContactList contacts={contacts} onDeleteContact={this.deleteContact} />
+        <ContactList
+          contacts={foundContacts}
+          onDeleteContact={this.deleteContact}
+        />
       </Container>
     );
   }

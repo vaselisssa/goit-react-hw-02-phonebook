@@ -35,7 +35,7 @@ class ContactForm extends Component {
 
   render() {
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit} autoComplete="off">
         <Label htmlFor={this.nameInputId}>
           Name:
           <Input

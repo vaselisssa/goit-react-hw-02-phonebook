@@ -1,67 +1,54 @@
-import React, { Component } from 'react';
-import { nanoid } from 'nanoid';
-import { Form, Label, Input, AddButton } from './ContactForm.styled';
+import React from 'react';
+import { Formik, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { Form, Label, Input, ErrorText, AddButton } from './ContactForm.styled';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+const FormError = ({ name }) => {
+  return (
+    <ErrorMessage
+      name={name}
+      render={message => <ErrorText>{message}</ErrorText>}
+    />
+  );
+};
 
-  //*генерація унікальних id
-  nameInputId = nanoid();
-  numberInputId = nanoid();
-
-  //*Обробник зміни значень полів вводу форми
-  handleInputChange = event => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  //*Обробник відправки форми
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
-  };
-
-  //*Очищення полів форми
-  reset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
-
-  render() {
-    return (
-      <Form onSubmit={this.handleSubmit} autoComplete="off">
-        <Label htmlFor={this.nameInputId}>
+const ContactForm = ({ onAddContact }) => {
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required'),
+    number: Yup.string()
+      .matches(
+        /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
+        'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
+      )
+      .required('Number is required'),
+  });
+  return (
+    <Formik
+      initialValues={{
+        name: '',
+        number: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values, { resetForm }) => {
+        onAddContact(values);
+        resetForm();
+      }}
+    >
+      <Form>
+        <Label>
           Name:
-          <Input
-            type="text"
-            id={this.nameInputId}
-            name="name"
-            value={this.state.name}
-            onChange={this.handleInputChange}
-            required
-          />
+          <Input type="text" name="name" />
+          <FormError name="name" />
         </Label>
-        <Label htmlFor={this.numberInputId}>
+        <Label>
           Number:
-          <Input
-            type="tel"
-            id={this.numberInputId}
-            name="number"
-            value={this.state.number}
-            onChange={this.handleInputChange}
-            required
-          />
+          <Input type="tel" name="number" />
+          <FormError name="number" />
         </Label>
         <AddButton type="submit">Add contact</AddButton>
       </Form>
-    );
-  }
-}
+    </Formik>
+  );
+};
 
 export default ContactForm;

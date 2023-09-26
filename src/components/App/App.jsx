@@ -64,7 +64,7 @@ export default class App extends Component {
     return (
       <Container>
         <Title children="Phonebook" />
-        <ContactForm onSubmit={this.addContact} />
+        <ContactForm onAddContact={this.addContact} />
         <SubTitle children="Contacts" />
 
         {contacts.length > 0 ? (

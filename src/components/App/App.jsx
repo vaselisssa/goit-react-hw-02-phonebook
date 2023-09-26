@@ -14,9 +14,14 @@ export default class App extends Component {
     ],
   };
 
+  addContact = data => {
+    console.log(data);
+  };
+
+  //* видалення контакту
   deleteContact = contactId => {
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+      contacts: prevState.contacts.filter(({ id }) => id !== contactId),
     }));
   };
 
@@ -24,11 +29,17 @@ export default class App extends Component {
     const { contacts } = this.state;
     return (
       <Container>
-        <Title>Phonebook</Title>
-        <ContactForm />
-        <SubTitle>Contacts</SubTitle>
-        <EmptyContactListText children="There are no contacts." />
-        <Filter />
+        <Title children="Phonebook" />
+        <ContactForm onSubmit={this.addContact} />
+        <SubTitle children="Contacts" />
+
+        {contacts.length > 0 ? (
+          //* Фільтр рендеримо тільки, якщо масив контактів не порожній
+          <Filter />
+        ) : (
+          <EmptyContactListText children="There are no contacts." />
+        )}
+
         <ContactList contacts={contacts} onDeleteContact={this.deleteContact} />
       </Container>
     );

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { nanoid } from 'nanoid';
 import { Container, Title, SubTitle, EmptyContactListText } from './App.styled';
 import ContactForm from 'components/ContactForm';
 import Filter from 'components/Filter';
@@ -14,14 +15,22 @@ export default class App extends Component {
     ],
   };
 
-  addContact = data => {
-    console.log(data);
+  //* додавання нового контакту
+  addContact = ({ name, number }) => {
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    this.setState(({ contacts }) => ({
+      contacts: [newContact, ...contacts],
+    }));
   };
 
   //* видалення контакту
   deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(({ id }) => id !== contactId),
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter(({ id }) => id !== contactId),
     }));
   };
 
